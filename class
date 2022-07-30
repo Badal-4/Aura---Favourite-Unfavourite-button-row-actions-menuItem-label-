@@ -1,0 +1,113 @@
+public without sharing class CustomerCommunity_ReportModuleController
+{
+    public static Id userId = UserInfo.getUserId();
+    public static Id portalContactId = [Select ContactId from User where Id =: userId].ContactId;
+    @auraEnabled(cacheable=true)
+    public static List<AccniteReports__c> getReportList()
+    {
+        
+       /* return [Select Id,Name,Description__c,Category__c,LastAccessed__c,Subscribed__c,Favourite__c from AccniteReports__c
+        where Category__c = 'Custom' and Contact__c =: portalContactId];*/
+        List<AccniteReports__c> accList = [Select Id,Name,Description__c,Category__c,LastAccessed__c,Subscribed__c,Favourite__c,Label__c from AccniteReports__c
+        where Category__c = 'Custom' and Contact__c =: portalContactId];
+
+        for(AccniteReports__c ar : accList)
+        {
+          if(ar.Favourite__c == true)
+          {
+            ar.Label__c = 'Unfavourite';
+            String s = ar.Label__c;
+            System.debug(ar.Name+' '+ar.Favourite__c+''+s);
+          }
+          else 
+          {
+            ar.Label__c = 'Favourite';
+          }
+        }
+        return accList;
+    }   
+
+    @auraEnabled()
+    public static void updateFavCheckbox(String recordId)
+    {
+        List<AccniteReports__c> reportList = [Select Id,Favourite__c from AccniteReports__c where Id =: recordId];
+        List<AccniteReports__c> listToUpdate = new List<AccniteReports__c>();
+
+        if(!reportList.isEmpty())
+        {
+            for(AccniteReports__c acc : reportList)
+            {
+                if(acc.Favourite__c == false || acc.Favourite__c == null)
+                {
+                    acc.Favourite__c = true;
+                    listToUpdate.add(acc);
+                }
+            }
+        }
+        update listToUpdate;
+    }
+
+    @auraEnabled(cacheable=true)
+    public static List<AccniteReports__c> getFavouriteReportList()
+    {
+        
+        return [Select Id,Name,Description__c,Category__c,LastAccessed__c,Subscribed__c,Favourite__c from AccniteReports__c where Favourite__c = true and Contact__c =: portalContactId];
+        
+    }  
+
+    @auraEnabled()
+    public static void updateSubCheckbox(String recordId)
+    {
+        List<AccniteReports__c> reportList = [Select Id,Subscribed__c from AccniteReports__c where Id =: recordId];
+        List<AccniteReports__c> listToUpdate = new List<AccniteReports__c>();
+
+        if(!reportList.isEmpty())
+        {
+            for(AccniteReports__c acc : reportList)
+            {
+                if(acc.Subscribed__c == false || acc.Subscribed__c == null )
+                {
+                    acc.Subscribed__c = true;
+                    listToUpdate.add(acc);
+                }
+            }
+        }
+        update listToUpdate;
+    }
+
+    @auraEnabled(cacheable=true)
+    public static List<AccniteReports__c> getSubscribedReportList()
+    {
+        
+        return [Select Id,Name,Description__c,Category__c,LastAccessed__c,Subscribed__c,Favourite__c from AccniteReports__c where Subscribed__c = true and Contact__c =: portalContactId];
+        
+    } 
+
+    @auraEnabled(cacheable=true)
+    public static List<AccniteReports__c> getPublicReportList()
+    {
+        
+        return [Select Id,Name,Description__c,Category__c,LastAccessed__c,Subscribed__c,Favourite__c from AccniteReports__c where Category__c = 'Public' and Contact__c =: portalContactId];
+        
+    } 
+ 
+    @auraEnabled()
+    public static void updateUnfavCheckbox(String recordId)
+    {
+        List<AccniteReports__c> reportList = [Select Id,Favourite__c from AccniteReports__c where Id =: recordId];
+        List<AccniteReports__c> listToUpdate = new List<AccniteReports__c>();
+
+        if(!reportList.isEmpty())
+        {
+            for(AccniteReports__c acc : reportList)
+            {
+                if(acc.Favourite__c == true )
+                {
+                    acc.Favourite__c = false;
+                    listToUpdate.add(acc);
+                }
+            }
+        }
+        update listToUpdate;
+    }
+}
