@@ -1,0 +1,116 @@
+<aura:component controller="CustomerCommunity_ReportModuleController" 
+implements="forceCommunity:themeLayout,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes"
+access="global" extends="c:CustomerCommunity_LoggedInUser_HeaderCmp">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
+    <aura:attribute name="reportlist" type="AccniteReports__c[]"/>
+    <aura:attribute name="exportWithId" type="boolean" default="false"/>
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="testList" type="String[]"/>
+    <aura:attribute name="link" type="String"/>
+    <aura:attribute name="rcdId" type="String"/>
+    <aura:attribute name="dateVal" type="Date"/>
+   <aura:attribute name="favBool" type="String"/>
+    <aura:attribute name="demoList" type="List" default="['red', 'green', 'blue']" />
+    <div style="width:100%;padding: 15px">
+       
+        <div style="float:right">
+            <lightning:button iconName="utility:download" iconPosition="left" label="Export as CSV" onclick="{!c.downloadSelectedCase}" class="slds-button slds-button_brand"/>        
+        </div>
+    </div>
+    <br/><br/>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        <thead>
+            <tr>
+               
+                <th scope="col">
+                    <div class="slds-truncate" title="Report Id">Report Name</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Name">Description</div>
+                </th>
+                <th scope="col">
+
+                    <div class="slds-truncate" title="Name">Category</div>
+                </th>
+               
+                <th scope="col">
+
+                    <div class="slds-truncate" title="Name">Last accessed</div>
+                </th>
+                <th scope="col">
+
+                    <div class="slds-truncate" title="Name">Favourite</div>
+                </th>
+                <th scope="col">
+
+                    <div class="slds-truncate" title="Name">Subscribed</div>
+                </th>
+                <th scope="col">
+
+                    <div class="slds-truncate" title="Name">Action</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.reportlist}" var="reportVar" indexVar="index"  >
+                <tr >  
+                    
+                    <td scope="row">
+                        <a  class=" font-color resizable" id="{!reportVar.Id}"  href="{!v.link}" target="_blank"> 
+                            {!reportVar.Name}
+                        </a>
+                    </td>
+                    <td scope="row">
+                            {!reportVar.Description__c}
+                            
+                    </td>
+                    <td scope="row">
+                        <a  class=" font-color resizable">
+                        {!reportVar.Category__c}
+                        </a>
+                    </td>
+                    
+                    <td scope="row">
+                        
+                        {!reportVar.LastAccessed__c}
+                        
+
+                    </td>
+                    <td scope="row">
+                       
+                       <lightning:input type="checkbox"  name="input1" value="{!reportVar.Favourite__c}" checked="{!reportVar.Favourite__c == true}" disabled="true"/>
+
+                    </td>
+                    <td scope="row">
+                        
+                        <lightning:input type="checkbox"  name="input1" value="{!reportVar.Favourite__c}" checked="{!reportVar.Subscribed__c == true}" disabled="true"/>
+
+                    </td>
+                    <!--Row Actions Starts-->
+                    
+                    <td>
+                        <!--<lightning:buttonMenu alternativeText="Show menu" onselect="{!c.handleClick}" class="{!reportVar.Id}">
+                           
+                <lightning:menuItem value="Run" label="Run" />
+                
+                <lightning:menuItem value="Export" label="Export" />
+                
+                <lightning:menuItem value="3" label="{!reportVar.Label__c}" />
+               
+                <lightning:menuItem value="4" label="Subscribe" />
+            </lightning:buttonMenu>-->
+            <lightning:buttonMenu  class="{!reportVar.Id}" onselect="{!c.handleClick}">
+                <lightning:menuItem label="Run" value="{!join(',', '', 'Run')}"/>
+                <lightning:menuItem label="Export" value="{!join(',', '', 'Export')}"/>
+                <!--<lightning:menuItem label="{!reportVar.Label__c}" value="{!join(',', '', (!reportVar.Label__c))}"/>-->
+                <lightning:menuItem label="{!reportVar.Label__c}" value="{!join(',', '', (reportVar.Label__c))}"/>
+                <lightning:menuItem label="Subscribe" value="{!join(',', '', 'Subscribe')}"/>
+                </lightning:buttonMenu> 
+                    </td>
+                    
+                    <!--Row Actions Ends-->
+                </tr>
+            </aura:iteration> 
+        </tbody>
+    </table>
+</aura:component>	
