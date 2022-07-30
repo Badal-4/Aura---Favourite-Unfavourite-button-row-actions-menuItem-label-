@@ -1,0 +1,89 @@
+({
+    /*doInit : function (component, event, helper) {      
+        helper.getReportData(component);     
+    },*/
+    doInit : function(component,event,helper)
+    {
+        helper.getReportData(component);
+      
+      //  var url = window.location.origin + '/community/s/custom-report-detail';
+      //  component.set("v.link",url);
+    },
+
+    downloadSelectedCase :function(component, event, helper){
+        var recordsList=component.get("v.reportlist");
+        var csv = helper.convertListToCSV(component, recordsList);
+        if (csv == null){return;}
+        // Create a temporal <a> html tag to download the CSV file
+        var hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:text/pdf;charset=utf-8,' + encodeURI(csv);
+        hiddenElement.target = '_self';
+        hiddenElement.download ='ReportExportData.csv';;
+        document.body.appendChild(hiddenElement);
+        // using click() js function to download csv file
+        hiddenElement.click();
+    },
+    
+    handleClick : function(component,event,helper)
+    {   
+      /*  var tempid = event.getSource().get("v.class");
+       var parseVar = tempid;
+    
+        component.set("v.testList",parseVar);
+       // console.log(JSON.parse(JSON.stringify(tempid)));
+        alert(component.get("v.testList"));
+        var recordsList=component.get("v.testList");
+        var csv = helper.convertListToCSV(component, recordsList);
+        if (csv == null){return;}
+        // Create a temporal <a> html tag to download the CSV file
+        var hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:text/pdf;charset=utf-8,' + encodeURI(csv);
+        hiddenElement.target = '_self';
+        hiddenElement.download ='ReportExportData.csv';;
+        document.body.appendChild(hiddenElement);
+        // using click() js function to download csv file
+        hiddenElement.click();*/
+      // console.log(parseVar);
+
+
+
+
+        /*switch(event.getParam('value')) {
+            case "Run": helper.handleRun(component,event,helper); break;
+            case "Export": helper.downloadSelectedCase2(component,event,helper); break;
+            case "3" : helper.updateFavourite(component,event,helper); break;
+            case "4" : helper.updateSubscribe(component,event,helper); break;
+        }
+        var r = event.getParam('label');
+        alert(r);*/
+
+        let parcedValue = event.getParam("value").split(',');
+        let value = parcedValue[0];
+        let label = parcedValue[1];
+     
+        console.log("value : " + value);
+        console.log("label: " + label);
+        if(value == 'Run')
+        {
+          helper.handleRun(component,event,helper);
+        }
+         else if(value == 'Export')
+         {
+           helper.downloadSelectedCase2(component,event,helper);
+         }
+         else if(value == 'Favourite')
+         {
+            helper.updateFavourite(component,event,helper);
+         }
+         else if(value == 'Unfavourite')
+         {
+            helper.updateUnfavourite(component,event,helper);
+         }
+         else if(value == 'Subscribe')
+         {
+            helper.updateSubscribe(component,event,helper);
+         }
+    },
+
+    
+ })
